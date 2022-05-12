@@ -1,6 +1,6 @@
 # TextBPN-Puls-Plus 
- It is the project for paper " Arbitrary Shape Text Detection via Boundary Transformer", which is the V2 for our privious work "Adaptive Boundary Proposal Network for Arbitrary Shape Text Detection"
+Arbitrary Shape Text Detection via Boundary Transformer
  
-The code and paper will be released as soon as possible.
+The paper has been released at [arXive](https://arxiv.org/abs/2205.05320); The code will be released as soon as possible.
 
 
