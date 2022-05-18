@@ -12,7 +12,8 @@ This project is based on [TextBPN](https://github.com/GXYM/TextBPN)
 - [x] Evaluation
 - [ ] Release pre-trained models
 - [ ] Release trained modelsn on each benchmarks
-- [ ] Prepare TextSpotter codes on TextBPN++
+- [ ] The number of control points is determined adaptively
+- [ ] Prepare TextSpotter codes based on TextBPN++
 
 
 
