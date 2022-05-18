@@ -197,3 +197,6 @@ Please cite the related works in your publications if it helps your research:
   year={2022}
 }
   ``` 
+ 
+ ## License
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GXYM/DRRG/blob/master/LICENSE.md) file for details
