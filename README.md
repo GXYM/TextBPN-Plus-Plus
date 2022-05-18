@@ -1,5 +1,5 @@
 # TextBPN-Puls-Plus 
-[](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)
+![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)
 
 ## Abstract
 This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection via Boundary Transformer](https://arxiv.org/abs/2205.05320);       
@@ -169,7 +169,7 @@ NOTE: The results on ICDAR-ArT and MLT-2017 are aslo can be found on the officia
 
 ### Visual comparison
 
-[](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/vis.png)
+![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/vis.png)
 
 Qualitative comparisons with [TextRay](https://github.com/LianaWang/TextRay), [ABCNet](https://github.com/aim-uofa/AdelaiDet), and [FCENet](https://github.com/open-mmlab/mmocr) on selected challenging samples from CTW-1500. The images (a)-(d) are borrowed from [FCENet](https://arxiv.org/abs/2104.10442).
 
