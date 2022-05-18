@@ -58,7 +58,7 @@ If DCN is used, some CUDA files need to be compiled
 
 ## Training 
 ### Prepar dataset
-We provide a simple example for each dataset in data, such as [Total-Text](), [CTW-1500](), and [ArT]() ...
+We provide a simple example for each dataset in data, such as [Total-Text](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/data/Total-Text), [CTW-1500](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/data/CTW-1500), and [ArT](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/data/ArT) ...
 
 
 ### Pre-training models
@@ -75,10 +75,10 @@ We provide some pre-tarining models on [SynText]() and [MLT-2017]()
 │       ├── TextBPN_resnet18_300.pth  #4s
 │       ├── TextBPN_deformable_resnet50_300.pth #1s
 ``` 
-NOTE: we also provide the  pre-tarining scripts for [SynText]().
+NOTE: we also provide the  pre-tarining scripts for [SynText](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/scripts-train).
 
 ### Runing the training scripts
-We provide training scripts for each dataset in scripts-train, such as [Total-Text](), [CTW-1500](), and [ArT]() ...
+We provide training scripts for each dataset in scripts-train, such as [Total-Text](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/scripts-train), [CTW-1500](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/scripts-train), and [ArT](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/scripts-train) ...
 
 ```
 # train_Totaltext_res50_1s.sh
@@ -96,7 +96,7 @@ CUDA_LAUNCH_BLOCKING=1 python3 train_textBPN.py --exp_name Totaltext --net resne
 ## Testing 
 
 ### Runing the Testing scripts
-We provide testing scripts for each dataset in scripts-eval, such as [Total-Text](), [CTW-1500](), and [ArT]() ...
+We provide testing scripts for each dataset in scripts-eval, such as [Total-Text](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/scripts-eval/Eval_Totaltext.sh), [CTW-1500](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/scripts-eval/Eval_CTW1500.sh), and [ArT](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/scripts-eval/Eval_ArT.sh) ...
 
 ```
 # Eval_ArT.sh
@@ -135,7 +135,7 @@ CUDA_LAUNCH_BLOCKING=1 python3 demo.py --net resnet18 --scale 4 --exp_name TD500
 
 ### Evaluate the performance
 
-Note that we provide some the protocols for benchmarks ([Total-Text](), [CTW-1500](), [MSRA-TD500](), [ICDAR2015]()). The embedded evaluation protocol in the code are obtatined from the official protocols. You don't need to run these protocols alone, because our test code will automatically call these scripts, please refer to "[util/eval.py]()"
+Note that we provide some the protocols for benchmarks ([Total-Text](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/dataset/total_text), [CTW-1500](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/dataset/ctw1500), [MSRA-TD500](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/dataset/TD500), [ICDAR2015](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/dataset/icdar15)). The embedded evaluation protocol in the code are obtatined from the official protocols. You don't need to run these protocols alone, because our test code will automatically call these scripts, please refer to "[util/eval.py](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/util/eval.py)"
 
 
 ### Evaluate the speed 
@@ -171,7 +171,7 @@ NOTE: The results on ICDAR-ArT and MLT-2017 are aslo can be found on the officia
 
 [](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/vis.png)
 
-Qualitative comparisons with [TextRay](), [ABCNet](), and [FCENet]() on selected challenging samples from CTW-1500. The images (a)-(d) are borrowed from [FCENet]().
+Qualitative comparisons with [TextRay](https://github.com/LianaWang/TextRay), [ABCNet](https://github.com/aim-uofa/AdelaiDet), and [FCENet](https://github.com/open-mmlab/mmocr) on selected challenging samples from CTW-1500. The images (a)-(d) are borrowed from [FCENet](https://arxiv.org/abs/2104.10442).
 
 
 ## Citing the related works
