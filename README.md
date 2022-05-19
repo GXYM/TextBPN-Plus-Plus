@@ -11,8 +11,8 @@ This project is based on [TextBPN](https://github.com/GXYM/TextBPN)
 - [x] scripts for training and testing
 - [x] Demo script
 - [x] Evaluation
-- [ ] Release pre-trained models
-- [ ] Release trained modelsn on each benchmarks
+- [x] Release pre-trained models
+- [x] Release trained modelsn on each benchmarks
 - [ ] The number of control points is determined adaptively
 - [ ] Prepare TextSpotter codes based on TextBPN++
 
@@ -62,7 +62,7 @@ We provide a simple example for each dataset in data, such as [Total-Text](https
 
 
 ### Pre-training models
-We provide some pre-tarining models on [SynText]() and [MLT-2017]()
+We provide some pre-tarining models on SynText [Baidu Drive](https://pan.baidu.com/s/1PsLrQWAVLDy0fSVp5HL9Ng) (download code: r1ff), [Google Drive](https://drive.google.com/file/d/1x64Lu_dMnQqs9gORQOMFL2wnXUzPWWGT/view?usp=sharing) and MLT-2017 [Baidu Drive](https://pan.baidu.com/s/19V9zqSMdgCHMvPTFngz8Fg) (download code: srym), [Google Drive](https://drive.google.com/file/d/1seVzFT657YzP-lc--yUqsVUek2mpw9tP/view?usp=sharing)
 
 ```
 ├── pretrain
@@ -165,7 +165,8 @@ The results are reported in our paper as follows:
 | ICDAR-ArT   | [Res50-1s]()	    |  71.07 |81.14 |75.77 |  - |
 | ICDAR-ArT   | [Res50-1s+DCN]()	|  **77.05** |**84.48** |**80.59** |  - |
 
-NOTE: The results on ICDAR-ArT and MLT-2017 are aslo can be found on the official competition website ([ICDAR-ArT](https://rrc.cvc.uab.es/?ch=14&com=evaluation&task=1) and [MLT-2017](https://rrc.cvc.uab.es/?ch=8&com=evaluation&task=1)).
+NOTE: The results on ICDAR-ArT and MLT-2017 are aslo can be found on the official competition website ([ICDAR-ArT](https://rrc.cvc.uab.es/?ch=14&com=evaluation&task=1) and [MLT-2017](https://rrc.cvc.uab.es/?ch=8&com=evaluation&task=1)). You can also download the models for each benchmarks
+from [Baidu Drive](https://pan.baidu.com/s/1lFgRE_qiAv8ww8pbRTTh6w) (download code: wct1)
 
 ### Visual comparison
 
