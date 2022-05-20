@@ -1,6 +1,10 @@
 # TextBPN-Puls-Plus 
 This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection via Boundary Transformer](https://arxiv.org/abs/2205.05320);  This project is based on [TextBPN](https://github.com/GXYM/TextBPN)       
-![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)
+![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)  
+
+NOTE: This paper is under review.
+
+and project were completed in January 2020 and accepted by PAMI in May 2022.
 
 ## ToDo List
 
