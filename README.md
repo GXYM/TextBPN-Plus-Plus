@@ -4,8 +4,6 @@ This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection v
 
 NOTE: This paper is under review.
 
-and project were completed in January 2020 and accepted by PAMI in May 2022.
-
 ## ToDo List
 
 - [x] Release code
