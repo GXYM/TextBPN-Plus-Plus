@@ -18,7 +18,7 @@ This project is based on [TextBPN](https://github.com/GXYM/TextBPN)
 
 
 
-## 1.Prerequisites 
+## Prerequisites 
   python >= 3.7 ;  
   PyTorch >= 1.7.0;   
   Numpy >=1.2.0;   
@@ -30,7 +30,7 @@ This project is based on [TextBPN](https://github.com/GXYM/TextBPN)
   NOTE: We tested the code in the environment of Arch Linux+Python3.9 and  Ubuntu20.04+Python3.8. In different environments, the code needs to be adjusted slightly, and there is little difference in performance (not significant, so it can be ignored). Most of our experiments are mainly in Arch Linux + Python3.9.
   
 
-## 2. Makefile
+## Makefile
 
 If DCN is used, some CUDA files need to be compiled
 
@@ -50,7 +50,7 @@ If DCN is used, some CUDA files need to be compiled
   from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 ```
 
-## 3.Dataset Links  
+## Dataset Links  
 1. [CTW1500](https://drive.google.com/file/d/1A2s3FonXq4dHhD64A2NCWc8NQWMH2NFR/view?usp=sharing)   
 2. [TD500](https://drive.google.com/file/d/1ByluLnyd8-Ltjo9AC-1m7omZnI-FA1u0/view?usp=sharing)  
 3. [Total-Text](https://drive.google.com/file/d/17_7T_-2Bu3KSSg2OkXeCxj97TBsjvueC/view?usp=sharing)   
