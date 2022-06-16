@@ -8,7 +8,7 @@ from .TD500_Text import TD500Text
 from .Icdar19ArT_Json import ArtTextJson
 from .Icdar19ArT_Text import ArtText
 from .Icdar19_Text import Mlt2019Text
-from .CTW1500_Text import Ctw1500Text_New
-from .Total_Text import TotalText_New
+from .CTW1500_Text_New import Ctw1500Text_New
+from .Total_Text_New import TotalText_New
 from .Icdar19LSVT_Json import LsvtTextJson
 from .deploy import DeployDataset
