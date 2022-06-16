@@ -152,9 +152,9 @@ Note that the speed is related to both to the GPU and the CPU.
 The results are reported in our paper as follows:
 |  Datasets   |  Model        |recall | precision |F-measure| FPS |
 |:----------:	|:-----------:	|:-------:|:-----:|:-------:|:---:|
-| Total-Text 	| [Res18-4s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing) 	    |  81.90 |89.88 |85.70 |**32.5**|
-| Total-Text 	| [Res50-1s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing)	    |  85.34 |91.81 |88.46 |13.3|
-| Total-Text 	| [Res50-1s+DCN](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing)	|  **87.93** |**92.44** |**90.13** |13.2|
+| Total-Text 	| [Res18-4s](https://drive.google.com/file/d/1seVzFT657YzP-lc--yUqsVUek2mpw9tP/view?usp=sharing) 	    |  81.90 |89.88 |85.70 |**32.5**|
+| Total-Text 	| [Res50-1s](https://drive.google.com/file/d/1seVzFT657YzP-lc--yUqsVUek2mpw9tP/view?usp=sharing)	    |  85.34 |91.81 |88.46 |13.3|
+| Total-Text 	| [Res50-1s+DCN](https://drive.google.com/file/d/1seVzFT657YzP-lc--yUqsVUek2mpw9tP/view?usp=sharing)	|  **87.93** |**92.44** |**90.13** |13.2|
 | CTW-1500 	  | [Res18-4s](https://drive.google.com/file/d/1pEaY7eU7esq5p_ZKcAfDA-fNqQskroUH/view?usp=sharing) 	    |  81.62 |87.55 |84.48 |**35.3**|
 | CTW-1500  	| [Res50-1s](https://drive.google.com/file/d/1pEaY7eU7esq5p_ZKcAfDA-fNqQskroUH/view?usp=sharing)	    |  83.77 |87.30 |85.50 |14.1|
 | CTW-1500  	| [Res50-1s+DCN](https://drive.google.com/file/d/1pEaY7eU7esq5p_ZKcAfDA-fNqQskroUH/view?usp=sharing)	|  **84.71** |**88.34** |**86.49** |16.5|
@@ -163,8 +163,8 @@ The results are reported in our paper as follows:
 | MSRA-TD500  | [Res50-1s+DCN](https://drive.google.com/file/d/1zNdqcXwplor3T6yQuw1f2euYZex63K0b/view?usp=sharing)	|  **86.77** |**93.69** |**90.10** |15.3|
 | MLT-2017	  | [Res50-1s](https://drive.google.com/file/d/12_umKAo-eM0NYbAAuJBABlkIbyr5QNCy/view?usp=sharing) 	    |  65.67 |80.49 |72.33 |  - |
 | MLT-2017    | [Res50-1s+DCN](https://drive.google.com/file/d/12_umKAo-eM0NYbAAuJBABlkIbyr5QNCy/view?usp=sharing)	|  **72.10** |**83.74** |**77.48** |  - |
-| ICDAR-ArT   | [Res50-1s](https://drive.google.com/file/d/1rn8_YKI9B0JO52uA_4nL4TQE0jjgqm9i/view?usp=sharing)	    |  71.07 |81.14 |75.77 |  - |
-| ICDAR-ArT   | [Res50-1s+DCN](https://drive.google.com/file/d/1rn8_YKI9B0JO52uA_4nL4TQE0jjgqm9i/view?usp=sharing)	|  **77.05** |**84.48** |**80.59** |  - |
+| ICDAR-ArT   | [Res50-1s](https://drive.google.com/file/d/12_umKAo-eM0NYbAAuJBABlkIbyr5QNCy/view?usp=sharing)	    |  71.07 |81.14 |75.77 |  - |
+| ICDAR-ArT   | [Res50-1s+DCN](https://drive.google.com/file/d/12_umKAo-eM0NYbAAuJBABlkIbyr5QNCy/view?usp=sharing)	|  **77.05** |**84.48** |**80.59** |  - |
 
 NOTE: The results on ICDAR-ArT and MLT-2017 are aslo can be found on the official competition website ([ICDAR-ArT](https://rrc.cvc.uab.es/?ch=14&com=evaluation&task=1) and [MLT-2017](https://rrc.cvc.uab.es/?ch=8&com=evaluation&task=1)). You can also download the models for each benchmarks
 from [Baidu Drive](https://pan.baidu.com/s/1lFgRE_qiAv8ww8pbRTTh6w) (download code: wct1)
