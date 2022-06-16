@@ -2,7 +2,8 @@
 This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection via Boundary Transformer](https://arxiv.org/abs/2205.05320);  This project is based on [TextBPN](https://github.com/GXYM/TextBPN)       
 ![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)  
 
-NOTE: This paper is under review.
+NOTE: This paper is under review.  
+*Please light up the stars, thank you! Your encouragement is the driving force for us to constantly update！*
 
 
 ## News
