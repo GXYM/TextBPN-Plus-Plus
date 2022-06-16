@@ -2,8 +2,12 @@
 This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection via Boundary Transformer](https://arxiv.org/abs/2205.05320);  This project is based on [TextBPN](https://github.com/GXYM/TextBPN)       
 ![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)  
 
-NOTE: This paper is under review.  
-News: We updated the Google cloud links so that it can be downloaded without permission.
+NOTE: This paper is under review.
+
+
+## News
+- [x] 2022.06.16 Uploaded the missing file because of the naming problem（[CTW1500_Text_New](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/dataset/CTW1500_Text_New.py), [Total_Text_New](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/dataset/Total_Text_New.py)), which support the new label formats (xml, mat) for Total_Text and CTW1500.  
+- [x] 2022.06.16 We updated the Google cloud links so that it can be downloaded without permission.
 
 ## ToDo List
 
