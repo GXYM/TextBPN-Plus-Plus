@@ -3,7 +3,7 @@ This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection v
 ![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png)  
 
 NOTE: This paper is under review.  
-*Please light up the stars, thank you! Your encouragement is the driving force for us to constantly update！*
+*Please light up the stars, thank you! Your encouragement is the energy for us to constantly update！*
 
 
 ## News
