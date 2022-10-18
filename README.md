@@ -7,7 +7,8 @@ NOTE: This paper is under review.
 
 
 ## News
-- [x] 2022.06.20 Updated the illustration of framework.
+- [x] 2022.10.18 The performance of our TextBPN++ on Document OCR have been proved by the paper ["Text Detection Forgot About Document OCR"](https://arxiv.org/pdf/2210.07903.pdf) with University of Oxford, which also reported the compared results for other text detection methods, such as PAN, DBNet, DBNet++, DCLNet, CRAFT etc. The comparison experiments is very detailed and very referential!
+- [x] 2022.06.20 Updated the illustration of framework. 
 - [x] 2022.06.16 Uploaded the missing file because of the naming problem（[CTW1500_Text_New](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/dataset/CTW1500_Text_New.py), [Total_Text_New](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/dataset/Total_Text_New.py)), which support the new label formats for Total_Text (mat) and CTW1500 (xml).  
 - [x] 2022.06.16 We updated the Google cloud links so that it can be downloaded without permission.
 
