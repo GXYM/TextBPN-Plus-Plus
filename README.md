@@ -19,7 +19,7 @@ NOTE: This paper is under review.
 - [x] Demo script
 - [x] Evaluation
 - [x] Release pre-trained models
-- [x] Release trained modelsn on each benchmarks
+- [x] Release trained models on each benchmarks
 - [ ] Prepare TextSpotter codes based on TextBPN++
 <!-- - [ ] The number of control points is determined adaptively  -->
 
