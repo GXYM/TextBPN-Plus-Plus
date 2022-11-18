@@ -157,11 +157,11 @@ CUDA_LAUNCH_BLOCKING=1 python3 eval_textBPN_speed.py --net resnet18 --scale 4 --
 
 Note that the speed is related to both to the GPU and the CPU.
 
-Our replicated performance (with) by using the updated codes:
-|  Datasets   |  Model        |recall | precision |F-measure| FPS |
-|:----------:	|:-----------:	|:-------:|:-----:|:-------:|:---:|
-| Total-Text 	| [Res50-1s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing) 	    | 84.22 |91.88 |87.88 |13|
-| CTW-1500  	| [Res50-1s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing)	    |  82.69 |86.53 |88.57 |14|
+Our replicated performance (without extra data for pre-training) by using the updated codes:
+|  Datasets   |  pre-training |  Model        |recall | precision |F-measure| FPS |
+|:----------:	|:-----------:  |:-----------:	|:-------:|:-----:|:-------:|:---:|
+| Total-Text 	|       -       | [Res50-1s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing) 	    | 84.22 |91.88 |87.88 |13|
+| CTW-1500  	|       -       | [Res50-1s](https://drive.google.com/file/d/11AtAA429JCha8AZLrp3xVURYZOcCC2s1/view?usp=sharing)	    |  82.69 |86.53 |88.57 |14|
 
 
 The results are reported in our paper as follows:
