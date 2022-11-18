@@ -157,6 +157,8 @@ CUDA_LAUNCH_BLOCKING=1 python3 eval_textBPN_speed.py --net resnet18 --scale 4 --
 
 Note that the speed is related to both to the GPU and the CPU.
 
+### Model performance  
+
 Our replicated performance (without extra data for pre-training) by using the updated codes:
 |  Datasets   |  pre-training |  Model        |recall | precision |F-measure| FPS |
 |:----------:	|:-----------:  |:-----------:	|:-------:|:-----:|:-------:|:---:|
