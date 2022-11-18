@@ -194,6 +194,13 @@ from [Baidu Drive](https://pan.baidu.com/s/1lFgRE_qiAv8ww8pbRTTh6w) (download co
 Qualitative comparisons with [TextRay](https://github.com/LianaWang/TextRay), [ABCNet](https://github.com/aim-uofa/AdelaiDet), and [FCENet](https://github.com/open-mmlab/mmocr) on selected challenging samples from CTW-1500. The images (a)-(d) are borrowed from [FCENet](https://arxiv.org/abs/2104.10442).
 
 
+## Reading Order Model
+
+![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/order.png)
+
+**Using the Reading Order Model to predict four key corners on the boundary proposal in turn. The reading order module will be released at a certain time.**
+
+
 ## Citing the related works
 
 Please cite the related works in your publications if it helps your research:
