@@ -93,8 +93,8 @@ class TextDataset(object):
         self.transform = transform
         self.is_training = is_training
         self.min_text_size = 4
-        self.jitter = 0.7
-        self.th_b = 0.4
+        self.jitter = 0.65
+        self.th_b = 0.35
 
     @staticmethod
     def sigmoid_alpha(x, k):
@@ -187,7 +187,7 @@ class TextDataset(object):
             cv2.fillPoly(inst_mask, [polygon.points.astype(np.int32)], color=(1,))
             dmp = ndimg.distance_transform_edt(inst_mask)  # distance transform
 
-            if polygon.text == '#' or np.max(dmp) < self.min_text_size:
+            if polygon.text == '#' or np.max(dmp) < self.min_text_size or np.sum(inst_mask)<150:
                 cv2.fillPoly(train_mask, [polygon.points.astype(np.int32)], color=(0,))
                 ignore_tags[idx] = -1
             else:

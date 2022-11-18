@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = '古溪'
+import os
+import cv2
 import numpy as np
 from dataset.data_util import pil_load_img
 from dataset.dataload import TextDataset, TextInstance
@@ -58,16 +60,7 @@ class Ctw1500Text_New(TextDataset):
             gt = list(map(int, tag.find("segs").text.split(",")))
             pts = np.stack([gt[0::2], gt[1::2]]).T.astype(np.int32)
 
-            if label != "#":
-                x = []; y = []
-                for cps in tag.findall("pts"):
-                    x.append(cps.get("x"))
-                    y.append(cps.get("y"))
-                cts = np.stack([list(map(int, x)), list(map(int, y))]).T.astype(np.int32)
-            else:
-                cts =None
-
-            polygons.append(TextInstance(pts, 'c', label, key_pts=cts))
+            polygons.append(TextInstance(pts, 'c', label))
 
         return polygons
 
@@ -122,8 +115,6 @@ class Ctw1500Text_New(TextDataset):
 
 
 if __name__ == '__main__':
-    import os
-    import cv2
     from util.augmentation import Augmentation
     from util import canvas as cav
     import time
@@ -154,17 +145,55 @@ if __name__ == '__main__':
         img = img.transpose(1, 2, 0)
         img = ((img * stds + means) * 255).astype(np.uint8)
 
-        distance_map = cav.heatmap(np.array(distance_field * 255 / np.max(distance_field), dtype=np.uint8))
-        cv2.imshow("distance_map", distance_map)
-        cv2.waitKey(0)
 
-        direction_map = cav.heatmap(np.array(direction_field[0] * 255 / np.max(direction_field[0]), dtype=np.uint8))
-        cv2.imshow("direction_field", direction_map)
-        cv2.waitKey(0)
+        boundary_point = ctrl_points[np.where(ignore_tags != 0)[0]]
+        for i, bpts in enumerate(boundary_point):
+            cv2.drawContours(img, [bpts.astype(np.int32)], -1, (0, 255, 0), 1)
+            for j, pp in enumerate(bpts):
+                if j == 0:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (255, 0, 255), -1)
+                elif j == 1:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 255, 255), -1)
+                else:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 0, 255), -1)
 
-        from util.vis_flux import vis_direction_field
-        vis_direction_field(direction_field)
+            ppts = proposal_points[i]
+            cv2.drawContours(img, [ppts.astype(np.int32)], -1, (0, 0, 255), 1)
+            for j, pp in enumerate(ppts):
+                if j == 0:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (255, 0, 255), -1)
+                elif j == 1:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 255, 255), -1)
+                else:
+                    cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 0, 255), -1)
+            cv2.imshow('imgs', img)
+            cv2.waitKey(0)
 
-        weight_map = cav.heatmap(np.array(weight_matrix * 255 / np.max(weight_matrix), dtype=np.uint8))
-        cv2.imshow("weight_matrix", weight_map)
-        cv2.waitKey(0)
+        # from util.misc import split_edge_seqence
+        # from cfglib.config import config as cfg
+        #
+        # ret, labels = cv2.connectedComponents(np.array(distance_field >0.35, dtype=np.uint8), connectivity=4)
+        # for idx in range(1, ret):
+        #     text_mask = labels == idx
+        #     ist_id = int(np.sum(text_mask*tr_mask)/np.sum(text_mask))-1
+        #     contours, _ = cv2.findContours(text_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        #     epsilon = 0.007 * cv2.arcLength(contours[0], True)
+        #     approx = cv2.approxPolyDP(contours[0], epsilon, True).reshape((-1, 2))
+        #
+        #     pts_num = approx.shape[0]
+        #     e_index = [(i, (i + 1) % pts_num) for i in range(pts_num)]
+        #     control_points = split_edge_seqence(approx, e_index, cfg.num_points)
+        #     control_points = np.array(control_points[:cfg.num_points, :]).astype(np.int32)
+        #
+        #     cv2.drawContours(img, [ctrl_points[ist_id].astype(np.int32)], -1, (0, 255, 0), 1)
+        #     cv2.drawContours(img, [control_points.astype(np.int32)], -1, (0, 0, 255), 1)
+        #     for j,  pp in enumerate(control_points):
+        #         if j == 0:
+        #             cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (255, 0, 255), -1)
+        #         elif j == 1:
+        #             cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 255, 255), -1)
+        #         else:
+        #             cv2.circle(img, (int(pp[0]), int(pp[1])), 2, (0, 255, 0), -1)
+        #
+        #     cv2.imshow('imgs', img)
+        #     cv2.waitKey(0)

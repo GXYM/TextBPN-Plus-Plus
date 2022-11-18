@@ -52,7 +52,6 @@ class TextLoss(nn.Module):
         neg = ((1 - target) * train_mask).bool()
 
         n_pos = pos.float().sum()
-
         if n_pos.item() > 0:
             loss_pos = self.BCE_loss(predict[pos], target[pos]).sum()
             loss_neg = self.BCE_loss(predict[neg], target[neg])
@@ -145,7 +144,9 @@ class TextLoss(nn.Module):
                                           scale_factor=1/cfg.scale, mode='bilinear').squeeze()
 
         # pixel class loss
-        cls_loss = self.cls_ohem(fy_preds[:, 0, :, :], tr_mask.float(), train_mask)
+        # cls_loss = self.cls_ohem(fy_preds[:, 0, :, :], tr_mask.float(), train_mask)
+        cls_loss = self.BCE_loss(fy_preds[:, 0, :, :],  tr_mask.float())
+        cls_loss = torch.mul(cls_loss, train_mask.float()).mean()
 
         # distance field loss
         dis_loss = self.MSE_loss(fy_preds[:, 1, :, :], distance_field)
@@ -164,18 +165,19 @@ class TextLoss(nn.Module):
         energy_loss = self.loss_energy_regularization(distance_field, py_preds, inds[0], h, w)
 
         if eps is None:
-            alpha = 1.0; beta = 3.0; gama = 0.05
+            alpha = 1.0; beta = 3.0; theta=0.5; gama = 0.05
         else:
-            alpha = 1.0; beta = 3.0; gama = 0.1*torch.sigmoid(torch.tensor((eps - cfg.max_epoch)/cfg.max_epoch))
-        loss = alpha*cls_loss + beta*dis_loss + norm_loss + angle_loss + gama*(point_loss + energy_loss)
+            alpha = 1.0; beta = 3.0; theta=0.5;
+            gama = 0.1*torch.sigmoid(torch.tensor((eps - cfg.max_epoch)/cfg.max_epoch))
+        loss = alpha*cls_loss + beta*dis_loss + theta*(norm_loss + angle_loss) + gama*(point_loss + energy_loss)
 
         loss_dict = {
             'total_loss': loss,
             'cls_loss': alpha*cls_loss,
             'distance loss': beta*dis_loss,
-            'dir_loss': norm_loss + angle_loss,
-            'norm_loss': norm_loss,
-            'angle_loss': angle_loss,
+            'dir_loss': theta*(norm_loss + angle_loss),
+            'norm_loss': theta*norm_loss,
+            'angle_loss': theta*angle_loss,
             'point_loss': gama*point_loss,
             'energy_loss': gama*energy_loss,
 

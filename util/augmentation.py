@@ -6,6 +6,9 @@ import cv2
 import copy
 import numpy.random as random
 from shapely.geometry import Polygon
+import torchvision.transforms as transforms
+import torchvision.transforms.functional as F
+from PIL import ImageEnhance, Image
 
 
 ###<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<###
@@ -99,7 +102,7 @@ class RandomMirror(object):
     def __call__(self, image, polygons=None):
         if polygons is None:
             return image, polygons
-        if np.random.randint(2):
+        if random.random()< 0.3:
             image = np.ascontiguousarray(image[:, ::-1])
             _, width, _ = image.shape
             for polygon in polygons:
@@ -719,22 +722,44 @@ class RandomResizePadding(object):
 
         return image, polygons
 
+transform_type_dict = dict(
+    brightness=ImageEnhance.Brightness, contrast=ImageEnhance.Contrast,
+    sharpness=ImageEnhance.Sharpness,   color=ImageEnhance.Color
+)
+
+
+class RandomDistortion(object):
+    def __init__(self, transform_dict, prob=0.5):
+        self.transforms = [(transform_type_dict[k], transform_dict[k]) for k in transform_dict]
+        self.prob = prob
+
+    def __call__(self, img, target):
+        if random.random() > self.prob:
+            return img, target
+        out = Image.fromarray(img)
+        rand_num = np.random.uniform(0, 1, len(self.transforms))
+
+        for i, (transformer, alpha) in enumerate(self.transforms):
+            r = alpha * (rand_num[i] * 2.0 - 1.0) + 1  # r in [1-alpha, 1+alpha)
+            out = transformer(out).enhance(r)
+
+        return np.array(out), target
+
 
 class Augmentation(object):
-
     def __init__(self, size, mean, std):
         self.size = size
         self.mean = mean
         self.std = std
+        self._transform_dict = {'brightness': 0.5, 'contrast': 0.5, 'sharpness': 0.8386, 'color': 0.5}
         self.augmentation = Compose([
             RandomCropFlip(),
             RandomResizeScale(size=self.size, ratio=(3. / 8, 5. / 2)),
             RandomResizedCrop(),
-            RotatePadding(up=30, colors=True),  # pretrain on Syn is "up=15", else is "up=30"
+            RotatePadding(up=60, colors=True),  # pretrain on Syn is "up=30", else is "up=60"
             ResizeLimitSquare(size=self.size),
-            # # RandomBrightness(),
-            # # RandomContrast(),
             RandomMirror(),
+            RandomDistortion(self._transform_dict),
             Normalize(mean=self.mean, std=self.std),
         ])
 

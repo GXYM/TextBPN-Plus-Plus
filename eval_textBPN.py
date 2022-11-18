@@ -89,6 +89,7 @@ def inference(model, test_loader, output_dir):
         img_show = ((img_show * cfg.stds + cfg.means) * 255).astype(np.uint8)
 
         if cfg.viz:
+        # if True:
             gt_contour = []
             label_tag = meta['label_tag'][idx].int().cpu().numpy()
             for annot, n_annot in zip(meta['annotation'][idx], meta['n_annotation'][idx]):
