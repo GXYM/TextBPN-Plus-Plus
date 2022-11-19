@@ -7,6 +7,7 @@ NOTE: This paper is under review.
 
 
 ## News
+- [x] 2022.11.19 Displayed the visualization results of Reading Order Module.  
 - [x] 2022.11.18 **Important update! Fixed some bugs in training code.**  These bugs make it difficult to reproduce the perfromance in the paper without pre-training. The updated code has more stable training and better performance. Thanks to the developers who made me aware of these bugs, and push us to fix these bugs. The description of the code change and the details of the reproduction are [here](https://github.com/GXYM/TextBPN-Plus-Plus/tree/main/output).  
 - [x] 2022.10.18 The performance of our TextBPN++ on Document OCR have been proved by the paper ["Text Detection Forgot About Document OCR"](https://arxiv.org/pdf/2210.07903.pdf) with University of Oxford, which also reported the compared results for other text detection methods, such as PAN, DBNet, DBNet++, DCLNet, CRAFT etc. The comparison experiments is very detailed and very referential!
 - [x] 2022.06.20 Updated the illustration of framework. 
