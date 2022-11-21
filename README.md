@@ -165,7 +165,7 @@ Our replicated performance (without extra data for pre-training) by using the up
 |  Datasets   |  pre-training |  Model        |recall | precision |F-measure| FPS |
 |:----------:	|:-----------:  |:-----------:	|:-------:|:-----:|:-------:|:---:|
 | Total-Text 	|       -       | [Res50-1s](https://drive.google.com/file/d/1wZOXGrM74CbrGY_lo4yF907VpbwnLf9d/view?usp=sharing) 	    | 84.22 |91.88 |87.88 |13|
-| CTW-1500  	|       -       | [Res50-1s](https://drive.google.com/file/d/1wZOXGrM74CbrGY_lo4yF907VpbwnLf9d/view?usp=sharing)	    |  82.69 |86.53 |88.57 |14|
+| CTW-1500  	|       -       | [Res50-1s](https://drive.google.com/file/d/1wZOXGrM74CbrGY_lo4yF907VpbwnLf9d/view?usp=sharing)	    | 82.69 |86.53 |84.57 |14|
 
 
 The results are reported in our paper as follows:
