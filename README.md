@@ -230,7 +230,8 @@ Please cite the related works in your publications if it helps your research:
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GXYM/DRRG/blob/master/LICENSE.md) file for details  
 
 
- ## Security
+## Security
 [![Security Status](https://www.murphysec.com/platform3/v3/badge/1609104752022396928.svg?t=1)](https://www.murphysec.com/accept?code=e309cbcc5a3ad7fb17b4df1067abccbe&type=1&from=2&t=1)
+
 
 
