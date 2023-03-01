@@ -196,7 +196,7 @@ class TextNet(nn.Module):
         if self.is_training or cfg.exp_name in ['ArT', 'MLT2017', "MLT2019"] or test_speed:
             image = input_dict["img"]
         else:
-            image = torch.zeros((b, c, cfg.test_size[1], cfg.test_size[1]), dtype=torch.float32).to(cfg.device)
+            image = torch.zeros((b, c, cfg.test_size[0], cfg.test_size[1]), dtype=torch.float32).to(cfg.device)
             image[:, :, :h, :w] = input_dict["img"][:, :, :, :]
 
         up1, _, _, _, _ = self.fpn(image)
