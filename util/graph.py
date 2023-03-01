@@ -113,7 +113,7 @@ def graph_propagation_naive(edges, score, th, bboxs=None, dis_thresh=50, pool='a
         raise ValueError('Pooling operation not supported')
 
     nodes = np.sort(np.unique(edges.flatten()))
-    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int)
+    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int32)
     mapping[nodes] = np.arange(nodes.shape[0])
     link_idx = mapping[edges]
     vertex = [Data(n) for n in nodes]
@@ -180,7 +180,7 @@ def graph_propagation(edges, score, max_sz, step=0.1, beg_th=0.5, pool=None):
         raise ValueError('Pooling operation not supported')
 
     nodes = np.sort(np.unique(edges.flatten()))
-    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int)
+    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int32)
     mapping[nodes] = np.arange(nodes.shape[0])
     link_idx = mapping[edges]
     vertex = [Data(n) for n in nodes]
@@ -210,7 +210,7 @@ def graph_propagation_soft(edges, score, max_sz, step=0.1, **kwargs):
         score_dict[e[0], e[1]] = score[i]
 
     nodes = np.sort(np.unique(edges.flatten()))
-    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int)
+    mapping = -1 * np.ones((nodes.max()+1), dtype=np.int32)
     mapping[nodes] = np.arange(nodes.shape[0])
     link_idx = mapping[edges]
     vertex = [Data(n) for n in nodes]
