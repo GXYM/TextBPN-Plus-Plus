@@ -35,7 +35,7 @@ NOTE: This paper is under review.
   CUDA >=11.1;  
   GCC >=10.0;   
   *opencv-python < 4.5.0*  
-  NVIDIA GPU(2080 or 3080);  
+  NVIDIA GPU(2080 or 3090);  
   
   NOTE: We tested the code in the environment of Arch Linux+Python3.9 and  Ubuntu20.04+Python3.8. In different environments, the code needs to be adjusted slightly, and there is little difference in performance (not significant, so it can be ignored). Most of our experiments are mainly in Arch Linux + Python3.9.
   
