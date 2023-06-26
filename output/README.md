@@ -2,8 +2,7 @@
 ## Code Update Description
 **Solving the difficulties of reproducing the performance in our paper**
 
-**Reproduction records of some followers**：
-![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/output/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230626221956.jpg) 
+**Reproduction records of some followers** in [here](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/output/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230626221956.jpg) 
 
 ## Code change
 
