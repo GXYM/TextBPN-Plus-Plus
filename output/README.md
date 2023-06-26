@@ -2,6 +2,9 @@
 ## Code Update Description
 **Solving the difficulties of reproducing the performance in our paper**
 
+Reproduction records of some followers：
+![](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/vis/framework.png) 
+
 ## Code change
 
 
