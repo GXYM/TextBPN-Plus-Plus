@@ -226,6 +226,53 @@ Please cite the related works in your publications if it helps your research:
   year={2023},
   publisher={IEEE}
 }
+
+@article{DBLP:journals/pami/ZhangZCHY23,
+  author       = {Shi{-}Xue Zhang and
+                  Xiaobin Zhu and
+                  Lei Chen and
+                  Jie{-}Bo Hou and
+                  Xu{-}Cheng Yin},
+  title        = {Arbitrary Shape Text Detection via Segmentation With Probability Maps},
+  journal      = {{IEEE} Trans. Pattern Anal. Mach. Intell.},
+  volume       = {45},
+  number       = {3},
+  pages        = {2736--2750},
+  year         = {2023},
+  url          = {https://doi.org/10.1109/TPAMI.2022.3176122},
+  doi          = {10.1109/TPAMI.2022.3176122},
+  timestamp    = {Sat, 25 Feb 2023 21:35:10 +0100},
+  biburl       = {https://dblp.org/rec/journals/pami/ZhangZCHY23.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{zhang2022kernel,
+  title={Kernel proposal network for arbitrary shape text detection},
+  author={Zhang, Shi-Xue and Zhu, Xiaobin and Hou, Jie-Bo and Yang, Chun and Yin, Xu-Cheng},
+  journal={IEEE Transactions on Neural Networks and Learning Systems},
+  year={2022},
+  publisher={IEEE}
+}
+
+@inproceedings{DBLP:conf/cvpr/ZhangZHLYWY20,
+  author       = {Shi{-}Xue Zhang and
+                  Xiaobin Zhu and
+                  Jie{-}Bo Hou and
+                  Chang Liu and
+                  Chun Yang and
+                  Hongfa Wang and
+                  Xu{-}Cheng Yin},
+  title        = {Deep Relational Reasoning Graph Network for Arbitrary Shape Text Detection},
+  booktitle    = {2020 {IEEE/CVF} Conference on Computer Vision and Pattern Recognition,
+                  {CVPR} 2020, Seattle, WA, USA, June 13-19, 2020},
+  pages        = {9696--9705},
+  publisher    = {Computer Vision Foundation / {IEEE}},
+  year         = {2020},
+  doi          = {10.1109/CVPR42600.2020.00972},
+  timestamp    = {Sun, 02 Oct 2022 15:58:41 +0200},
+  biburl       = {https://dblp.org/rec/conf/cvpr/ZhangZHLYWY20.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
   ``` 
  
  ## License
