@@ -219,10 +219,12 @@ Please cite the related works in your publications if it helps your research:
   year      = {2021},
 }
 
-@inproceedings{Zhang2022ArbitraryST,
-  title={Arbitrary Shape Text Detection via Boundary Transformer},
-  author={S. Zhang and Xiaobin Zhu and Chun Yang and Xu-Cheng Yin},
-  year={2022}
+@article{zhang2023arbitrary,
+  title={Arbitrary shape text detection via boundary transformer},
+  author={Zhang, Shi-Xue and Yang, Chun and Zhu, Xiaobin and Yin, Xu-Cheng},
+  journal={IEEE Transactions on Multimedia},
+  year={2023},
+  publisher={IEEE}
 }
   ``` 
  
