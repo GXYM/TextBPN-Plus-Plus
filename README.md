@@ -241,9 +241,6 @@ Please cite the related works in your publications if it helps your research:
   year         = {2023},
   url          = {https://doi.org/10.1109/TPAMI.2022.3176122},
   doi          = {10.1109/TPAMI.2022.3176122},
-  timestamp    = {Sat, 25 Feb 2023 21:35:10 +0100},
-  biburl       = {https://dblp.org/rec/journals/pami/ZhangZCHY23.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{zhang2022kernel,
@@ -269,9 +266,6 @@ Please cite the related works in your publications if it helps your research:
   publisher    = {Computer Vision Foundation / {IEEE}},
   year         = {2020},
   doi          = {10.1109/CVPR42600.2020.00972},
-  timestamp    = {Sun, 02 Oct 2022 15:58:41 +0200},
-  biburl       = {https://dblp.org/rec/conf/cvpr/ZhangZHLYWY20.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
   ``` 
  
