@@ -83,25 +83,7 @@ def __init__(self, transform, is_training=False):
 
 
 * 4.change the code in augmentation.py (Uncertain impact; The range of angle augmentation is 60 not 30; add the RandomDistortion)
-```
-class Augmentation(object):
-    def __init__(self, size, mean, std):
-        self.size = size
-        self.mean = mean
-        self.std = std
-        self._transform_dict = {'brightness': 0.5, 'contrast': 0.5, 'sharpness': 0.8386, 'color': 0.5}
-        self.augmentation = Compose([
-            RandomCropFlip(),
-            RandomResizeScale(size=self.size, ratio=(3. / 8, 5. / 2)),
-            RandomResizedCrop(),
-            RotatePadding(up=60, colors=True),  # pretrain on Syn is "up=15", else is "up=30"
-            ResizeLimitSquare(size=self.size),
-            RandomMirror(),
-            RandomDistortion(self._transform_dict),
-            Normalize(mean=self.mean, std=self.std),
-        ])
-```
-to 
+
 ```
 class Augmentation(object):
     def __init__(self, size, mean, std):
@@ -120,7 +102,25 @@ class Augmentation(object):
             Normalize(mean=self.mean, std=self.std),
         ])
 ```
-
+to 
+```
+class Augmentation(object):
+    def __init__(self, size, mean, std):
+        self.size = size
+        self.mean = mean
+        self.std = std
+        self._transform_dict = {'brightness': 0.5, 'contrast': 0.5, 'sharpness': 0.8386, 'color': 0.5}
+        self.augmentation = Compose([
+            RandomCropFlip(),
+            RandomResizeScale(size=self.size, ratio=(3. / 8, 5. / 2)),
+            RandomResizedCrop(),
+            RotatePadding(up=60, colors=True),  # pretrain on Syn is "up=15", else is "up=30"
+            ResizeLimitSquare(size=self.size),
+            RandomMirror(),
+            RandomDistortion(self._transform_dict),
+            Normalize(mean=self.mean, std=self.std),
+        ])
+```
 
 ## Recurrence details
 
