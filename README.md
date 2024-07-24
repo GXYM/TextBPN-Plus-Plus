@@ -272,3 +272,8 @@ Please cite the related works in your publications if it helps your research:
  ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/GXYM/DRRG/blob/master/LICENSE.md) file for details  
 
+<!---->
+## ✨ Star History
+[![Star History](https://api.star-history.com/svg?repos=GXYM/TextBPN-Plus-Plus&type=Date)](https://star-history.com/#GXYM/TextBPN-Plus-Plus&Date)
+
+
