@@ -6,7 +6,7 @@ This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection v
 
 
 ## News
-- [x] 2025.05.16 We are excited to announce the release of our **General Scene Super OCR Detection Model** ([**TextBPN-OCR**](https://github.com/GXYM/TextBPN-OCR))! Designed for robust performance in complex, multilingual environments, this model excels at detecting text of various shapes in any scene. Leveraging a powerful architecture based on DCN and ResNet50, it has been trained on 1.5 million synthetic images and over 50 million real-world scene samples. Despite its strong detection capabilities, the model remains lightweight and efficient, making it ideal for a wide range of applications.  
+- [x] 2025.05.16 We are excited to announce the release of our **General Scene Super OCR Detection Model** ([**TextBPN-OCR**](https://github.com/GXYM/TextBPN-OCR))! Designed for robust performance in complex, multilingual environments, this model excels at detecting text of various shapes in any scene. Leveraging a powerful architecture based on DCN and ResNet50, it has been trained on 1.5 million synthetic images and over 0.5 million real-world scene samples. Despite its strong detection capabilities, the model remains lightweight and efficient, making it ideal for a wide range of applications.  
 - [x] 2025.03.13 Added a script for multi-GPU training [train_textBPN_DDP.py](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/train_textBPN_DDP.py) 
 - [x] 2023.06.14 Our paper of TextBPN++ has been accepted by IEEE Transactions on Multimedia (T-MM 2023), which can be obtained at [IEEE Xplore](https://ieeexplore.ieee.org/document/10153666).  
 - [x] 2022.11.19 Displayed the visualization results of Reading Order Module.  
