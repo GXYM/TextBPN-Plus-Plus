@@ -6,7 +6,7 @@ This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection v
 
 
 ## News
-- [x] 2025.06.30 Our model achieved first place on [ArT2019](https://rrc.cvc.uab.es/?ch=14&com=evaluation&task=1)_ and [MLT2019](https://rrc.cvc.uab.es/?ch=15&com=evaluation&task=1)
+- [x] 2025.06.30 Our model [TextBPN-MLOCR](https://github.com/GXYM/TextBPN-MLOCR) achieved first place on [ArT2019](https://rrc.cvc.uab.es/?ch=14&com=evaluation&task=1)_ and [MLT2019](https://rrc.cvc.uab.es/?ch=15&com=evaluation&task=1)
 - [x] 2025.05.16 We are excited to announce the release of our **TextBPN-MLOCR: Advanced Multi-Lingual Scene Text Detection** ([**TextBPN-MLOCR
 **](https://github.com/GXYM/TextBPN-MLOCR))! Designed for robust performance in complex, multilingual environments, this model excels at detecting text of various shapes in any scene. Leveraging a powerful architecture based on DCN and ResNet50, it has been trained on 1.5 million synthetic images and over 0.5 million real-world scene samples. Despite its strong detection capabilities, the model remains lightweight and efficient, making it ideal for a wide range of applications.  
 - [x] 2025.03.13 Added a script for multi-GPU training [train_textBPN_DDP.py](https://github.com/GXYM/TextBPN-Plus-Plus/blob/main/train_textBPN_DDP.py) 
