@@ -33,15 +33,16 @@ This is a Pytorch implementation of TextBPN++: [Arbitrary Shape Text Detection v
 
 
 ## Prerequisites 
-  python >= 3.7 ;  
-  PyTorch >= 1.7.0;   
-  Numpy >=1.2.0;   
-  CUDA >=11.1;  
+  Python 3.8 – 3.12;  
+  PyTorch >= 2.1 (validated with 2.9.0);   
+  TorchVision matching the PyTorch release;  
+  NumPy >=1.20;   
+  CUDA toolkit >=11.8 (tested with CUDA 12.x);  
   GCC >=10.0;   
   *opencv-python < 4.5.0*  
-  NVIDIA GPU(2080 or 3090);  
+  NVIDIA GPU (Turing/Volta class or newer);  
   
-  NOTE: We tested the code in the environment of Arch Linux+Python3.9 and  Ubuntu20.04+Python3.8. In different environments, the code needs to be adjusted slightly, and there is little difference in performance (not significant, so it can be ignored). Most of our experiments are mainly in Arch Linux + Python3.9.
+  NOTE: We currently validate builds on Arch Linux + Python 3.9 and Ubuntu 20.04/22.04 with Python 3.10–3.12, using PyTorch 2.9.0 and CUDA 12.x. Other environments may require minor adjustments but should behave similarly in performance.
   
 
 ## Makefile
