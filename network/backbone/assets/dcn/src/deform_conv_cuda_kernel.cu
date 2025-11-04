@@ -62,13 +62,12 @@
 
 #include <ATen/ATen.h>
 #include <ATen/cuda/Atomic.cuh>
-#include <c10/cuda/CUDAAtomic.cuh>
+#include <cuda_fp16.h>
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
 
 using namespace at;
-using c10::cuda::atomic::atomicAdd;
 
 #define CUDA_KERNEL_LOOP(i, n)                                 \
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); \
@@ -80,6 +79,22 @@ const int kMaxGridNum = 65535;
 inline int GET_BLOCKS(const int N)
 {
   return std::min(kMaxGridNum, (N + CUDA_NUM_THREADS - 1) / CUDA_NUM_THREADS);
+}
+
+template <typename T>
+__device__ inline void dcn_atomic_add(T *address, T val)
+{
+  atomicAdd(address, val);
+}
+
+template <>
+__device__ inline void dcn_atomic_add<at::Half>(at::Half *address, at::Half val)
+{
+#if defined(__CUDA_ARCH__)
+  static_assert(sizeof(at::Half) == sizeof(__half), "Half size mismatch");
+  atomicAdd(reinterpret_cast<__half *>(address),
+            *reinterpret_cast<const __half *>(&val));
+#endif
 }
 
 template <typename scalar_t>
@@ -328,7 +343,7 @@ __global__ void deformable_col2im_gpu_kernel(
         {
           int cur_bottom_grad_pos = ((b * channels + c) * height + cur_h + dy) * width + cur_w + dx;
           scalar_t weight = get_gradient_weight(cur_inv_h_data, cur_inv_w_data, cur_h + dy, cur_w + dx, height, width);
-          atomicAdd(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
+          dcn_atomic_add(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
         }
       }
     }
@@ -686,7 +701,7 @@ __global__ void modulated_deformable_col2im_gpu_kernel(const int n,
         {
           int cur_bottom_grad_pos = ((b * channels + c) * height + cur_h + dy) * width + cur_w + dx;
           scalar_t weight = dmcn_get_gradient_weight(cur_inv_h_data, cur_inv_w_data, cur_h + dy, cur_w + dx, height, width);
-          atomicAdd(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
+          dcn_atomic_add(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
         }
       }
     }

@@ -10,13 +10,12 @@
 
 #include <ATen/ATen.h>
 #include <ATen/cuda/Atomic.cuh>
-#include <c10/cuda/CUDAAtomic.cuh>
 #include <algorithm>
+#include <cuda_fp16.h>
 #include <math.h>
 #include <stdio.h>
 
 using namespace at;
-using c10::cuda::atomic::atomicAdd;
 
 #define CUDA_KERNEL_LOOP(i, n)                        \
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; \
@@ -27,6 +26,22 @@ const int CUDA_NUM_THREADS = 1024;
 inline int GET_BLOCKS(const int N)
 {
   return (N + CUDA_NUM_THREADS - 1) / CUDA_NUM_THREADS;
+}
+
+template <typename T>
+__device__ inline void dcn_atomic_add(T *address, T val)
+{
+  atomicAdd(address, val);
+}
+
+template <>
+__device__ inline void dcn_atomic_add<at::Half>(at::Half *address, at::Half val)
+{
+#if defined(__CUDA_ARCH__)
+  static_assert(sizeof(at::Half) == sizeof(__half), "Half size mismatch");
+  atomicAdd(reinterpret_cast<__half *>(address),
+            *reinterpret_cast<const __half *>(&val));
+#endif
 }
 
 template <typename scalar_t>
@@ -239,10 +254,10 @@ __global__ void DeformablePSROIPoolBackwardAccKernel(
         scalar_t q10 = dist_x * (1 - dist_y);
         scalar_t q11 = dist_x * dist_y;
         int bottom_index_base = c * height * width;
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y0 * width + x0, q00 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y1 * width + x0, q01 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y0 * width + x1, q10 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y1 * width + x1, q11 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y0 * width + x0, q00 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y1 * width + x0, q01 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y0 * width + x1, q10 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y1 * width + x1, q11 * diff_val);
 
         if (no_trans)
         {
@@ -257,8 +272,8 @@ __global__ void DeformablePSROIPoolBackwardAccKernel(
         scalar_t diff_y = (U11 * dist_x + U01 * (1 - dist_x) - U10 * dist_x - U00 * (1 - dist_x)) * trans_std * diff_val;
         diff_y *= roi_height;
 
-        atomicAdd(bottom_trans_diff + (((n * num_classes + class_id) * 2) * part_size + part_h) * part_size + part_w, diff_x);
-        atomicAdd(bottom_trans_diff + (((n * num_classes + class_id) * 2 + 1) * part_size + part_h) * part_size + part_w, diff_y);
+        dcn_atomic_add(bottom_trans_diff + (((n * num_classes + class_id) * 2) * part_size + part_h) * part_size + part_w, diff_x);
+        dcn_atomic_add(bottom_trans_diff + (((n * num_classes + class_id) * 2 + 1) * part_size + part_h) * part_size + part_w, diff_y);
       }
     }
   }
