@@ -67,7 +67,7 @@
 #include <stdio.h>
 
 using namespace at;
-using at::cuda::atomicAdd;
+using at::cuda::atomic::atomicAdd;
 
 #define CUDA_KERNEL_LOOP(i, n)                                 \
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); \
