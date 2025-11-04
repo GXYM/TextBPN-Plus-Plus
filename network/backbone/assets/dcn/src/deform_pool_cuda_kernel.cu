@@ -10,7 +10,7 @@
 
 #include <ATen/ATen.h>
 #include <ATen/cuda/Atomic.cuh>
-#include <c10/cuda/CUDAAtomicAdd.cuh>
+#include <c10/cuda/CUDAAtomic.cuh>
 #include <algorithm>
 #include <math.h>
 #include <stdio.h>
