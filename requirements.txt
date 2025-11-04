@@ -1,0 +1,8 @@
+opencv-python
+pillow-simd
+scipy
+easydict
+matplotlib
+shapely
+lxml
+torchvision
