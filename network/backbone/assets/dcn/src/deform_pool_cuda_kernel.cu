@@ -10,12 +10,13 @@
 
 #include <ATen/ATen.h>
 #include <ATen/cuda/Atomic.cuh>
+#include <c10/cuda/CUDAAtomicAdd.cuh>
 #include <algorithm>
 #include <math.h>
 #include <stdio.h>
 
 using namespace at;
-using at::cuda::atomicAdd;
+using c10::cuda::atomic::atomicAdd;
 
 #define CUDA_KERNEL_LOOP(i, n)                        \
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; \
