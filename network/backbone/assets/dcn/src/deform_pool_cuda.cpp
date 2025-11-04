@@ -41,9 +41,9 @@ void deform_psroi_pooling_cuda_forward(
   const int channels_trans = no_trans ? 2 : trans.size(1);
 
   const int num_bbox = bbox.size(0);
-  if (num_bbox != out.size(0))
-    AT_ERROR("Output shape and bbox number wont match: (%d vs %d).",
-             out.size(0), num_bbox);
+  TORCH_CHECK(num_bbox == out.size(0),
+              "Output shape and bbox number wont match: (", out.size(0),
+              " vs ", num_bbox, ").");
 
   DeformablePSROIPoolForward(
       input, bbox, trans, out, top_count, batch, channels, height, width,
@@ -67,9 +67,9 @@ void deform_psroi_pooling_cuda_backward(
   const int channels_trans = no_trans ? 2 : trans.size(1);
 
   const int num_bbox = bbox.size(0);
-  if (num_bbox != out_grad.size(0))
-    AT_ERROR("Output shape and bbox number wont match: (%d vs %d).",
-             out_grad.size(0), num_bbox);
+  TORCH_CHECK(num_bbox == out_grad.size(0),
+              "Output shape and bbox number wont match: (", out_grad.size(0),
+              " vs ", num_bbox, ").");
 
   DeformablePSROIPoolBackwardAcc(
       out_grad, input, bbox, trans, top_count, input_grad, trans_grad, batch,
