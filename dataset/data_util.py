@@ -8,5 +8,7 @@ Image.MAX_IMAGE_PIXELS = None
 
 def pil_load_img(path):
     image = Image.open(path)
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
     image = np.array(image)
     return image

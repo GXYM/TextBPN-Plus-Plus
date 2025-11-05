@@ -18,6 +18,17 @@ class UpBlok(nn.Module):
         self.deconv = nn.ConvTranspose2d(out_channels, out_channels, kernel_size=4, stride=2, padding=1)
 
     def forward(self, upsampled, shortcut):
+        # NOTE:
+        #   Several legacy checkpoints (e.g. deformable_resnet50 TD500 @ epoch 300)
+        #   were trained when UpBlok contained an internal ConvTranspose upsample.
+        #   After refactoring the FPN we use MergeBlok (no upsample) for scale=4.
+        #   When those old weights are loaded the learnt deconv filters are skipped,
+        #   leaving feature maps at half resolution.  The explicit resize keeps
+        #   the runtime compatible across both families of checkpoints without
+        #   affecting the newer models (resnet18/50 scale=4) whose tensors already
+        #   match in spatial dims.
+        if upsampled.shape[-2:] != shortcut.shape[-2:]:
+            upsampled = F.interpolate(upsampled, size=shortcut.shape[-2:], mode='bilinear', align_corners=False)
         x = torch.cat([upsampled, shortcut], dim=1)
         x = self.conv1x1(x)
         x = F.relu(x)
@@ -34,6 +45,12 @@ class MergeBlok(nn.Module):
         self.conv3x3 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
 
     def forward(self, upsampled, shortcut):
+        # See note in UpBlok.forward: we guard the concat by resizing when old
+        # checkpoints (with learned deconv upsample) are loaded on the refactored
+        # FPN. The check is a no-op for the current layout where shapes already
+        # align (e.g. resnet18 scale=4 and matching weights).
+        if upsampled.shape[-2:] != shortcut.shape[-2:]:
+            upsampled = F.interpolate(upsampled, size=shortcut.shape[-2:], mode='bilinear', align_corners=False)
         x = torch.cat([upsampled, shortcut], dim=1)
         x = self.conv1x1(x)
         x = F.relu(x)

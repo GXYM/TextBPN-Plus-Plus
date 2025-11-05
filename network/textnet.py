@@ -188,7 +188,12 @@ class TextNet(nn.Module):
     def load_model(self, model_path):
         print('Loading from {}'.format(model_path))
         state_dict = torch.load(model_path, map_location=torch.device(cfg.device))
-        self.load_state_dict(state_dict['model'], strict=(not self.is_training))
+        checkpoint = state_dict.get('model', state_dict)
+        missing_keys, unexpected_keys = self.load_state_dict(checkpoint, strict=False)
+        if missing_keys:
+            print('[WARN] Missing keys when loading {}: {}'.format(model_path, missing_keys))
+        if unexpected_keys:
+            print('[WARN] Unexpected keys skipped from {}: {}'.format(model_path, unexpected_keys))
 
     def forward(self, input_dict, test_speed=False):
         output = {}

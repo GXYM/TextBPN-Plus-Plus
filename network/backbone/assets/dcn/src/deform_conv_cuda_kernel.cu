@@ -61,10 +61,11 @@
 // modify from https://github.com/chengdazhi/Deformable-Convolution-V2-PyTorch/blob/mmdetection/mmdet/ops/dcn/src/deform_conv_cuda_kernel.cu
 
 #include <ATen/ATen.h>
-#include <THC/THCAtomics.cuh>
-#include <stdio.h>
-#include <math.h>
+#include <ATen/cuda/Atomic.cuh>
+#include <cuda_fp16.h>
 #include <float.h>
+#include <math.h>
+#include <stdio.h>
 
 using namespace at;
 
@@ -78,6 +79,22 @@ const int kMaxGridNum = 65535;
 inline int GET_BLOCKS(const int N)
 {
   return std::min(kMaxGridNum, (N + CUDA_NUM_THREADS - 1) / CUDA_NUM_THREADS);
+}
+
+template <typename T>
+__device__ inline void dcn_atomic_add(T *address, T val)
+{
+  atomicAdd(address, val);
+}
+
+template <>
+__device__ inline void dcn_atomic_add<at::Half>(at::Half *address, at::Half val)
+{
+#if defined(__CUDA_ARCH__)
+  static_assert(sizeof(at::Half) == sizeof(__half), "Half size mismatch");
+  atomicAdd(reinterpret_cast<__half *>(address),
+            *reinterpret_cast<const __half *>(&val));
+#endif
 }
 
 template <typename scalar_t>
@@ -256,10 +273,10 @@ void deformable_im2col(
   int channel_per_deformable_group = channels / deformable_group;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_im.type(), "deformable_im2col_gpu", ([&] {
-        const scalar_t *data_im_ = data_im.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        scalar_t *data_col_ = data_col.data<scalar_t>();
+      data_im.scalar_type(), "deformable_im2col_gpu", ([&] {
+        const scalar_t *data_im_ = data_im.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
 
         deformable_im2col_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_im_, data_offset_, height, width, ksize_h, ksize_w,
@@ -326,7 +343,7 @@ __global__ void deformable_col2im_gpu_kernel(
         {
           int cur_bottom_grad_pos = ((b * channels + c) * height + cur_h + dy) * width + cur_w + dx;
           scalar_t weight = get_gradient_weight(cur_inv_h_data, cur_inv_w_data, cur_h + dy, cur_w + dx, height, width);
-          atomicAdd(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
+          dcn_atomic_add(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
         }
       }
     }
@@ -350,10 +367,10 @@ void deformable_col2im(
   int channel_per_deformable_group = channels / deformable_group;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_col.type(), "deformable_col2im_gpu", ([&] {
-        const scalar_t *data_col_ = data_col.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        scalar_t *grad_im_ = grad_im.data<scalar_t>();
+      data_col.scalar_type(), "deformable_col2im_gpu", ([&] {
+        const scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        scalar_t *grad_im_ = grad_im.data_ptr<scalar_t>();
 
         deformable_col2im_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_col_, data_offset_, channels, height, width, ksize_h,
@@ -448,11 +465,11 @@ void deformable_col2im_coord(
   int channel_per_deformable_group = channels * ksize_h * ksize_w / deformable_group;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_col.type(), "deformable_col2im_coord_gpu", ([&] {
-        const scalar_t *data_col_ = data_col.data<scalar_t>();
-        const scalar_t *data_im_ = data_im.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        scalar_t *grad_offset_ = grad_offset.data<scalar_t>();
+      data_col.scalar_type(), "deformable_col2im_coord_gpu", ([&] {
+        const scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
+        const scalar_t *data_im_ = data_im.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        scalar_t *grad_offset_ = grad_offset.data_ptr<scalar_t>();
 
         deformable_col2im_coord_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_col_, data_im_, data_offset_, channels, height, width,
@@ -684,7 +701,7 @@ __global__ void modulated_deformable_col2im_gpu_kernel(const int n,
         {
           int cur_bottom_grad_pos = ((b * channels + c) * height + cur_h + dy) * width + cur_w + dx;
           scalar_t weight = dmcn_get_gradient_weight(cur_inv_h_data, cur_inv_w_data, cur_h + dy, cur_w + dx, height, width);
-          atomicAdd(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
+          dcn_atomic_add(grad_im + cur_bottom_grad_pos, weight * cur_top_grad);
         }
       }
     }
@@ -778,11 +795,11 @@ void modulated_deformable_im2col_cuda(
   const int num_kernels = channels * batch_size * height_col * width_col;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_im.type(), "modulated_deformable_im2col_gpu", ([&] {
-        const scalar_t *data_im_ = data_im.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        const scalar_t *data_mask_ = data_mask.data<scalar_t>();
-        scalar_t *data_col_ = data_col.data<scalar_t>();
+      data_im.scalar_type(), "modulated_deformable_im2col_gpu", ([&] {
+        const scalar_t *data_im_ = data_im.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        const scalar_t *data_mask_ = data_mask.data_ptr<scalar_t>();
+        scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
 
         modulated_deformable_im2col_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_im_, data_offset_, data_mask_, height_im, width_im, kernel_h, kenerl_w,
@@ -810,11 +827,11 @@ void modulated_deformable_col2im_cuda(
   const int num_kernels = channels * kernel_h * kernel_w * batch_size * height_col * width_col;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_col.type(), "modulated_deformable_col2im_gpu", ([&] {
-        const scalar_t *data_col_ = data_col.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        const scalar_t *data_mask_ = data_mask.data<scalar_t>();
-        scalar_t *grad_im_ = grad_im.data<scalar_t>();
+      data_col.scalar_type(), "modulated_deformable_col2im_gpu", ([&] {
+        const scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        const scalar_t *data_mask_ = data_mask.data_ptr<scalar_t>();
+        scalar_t *grad_im_ = grad_im.data_ptr<scalar_t>();
 
         modulated_deformable_col2im_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_col_, data_offset_, data_mask_, channels, height_im, width_im,
@@ -843,13 +860,13 @@ void modulated_deformable_col2im_coord_cuda(
   const int channel_per_deformable_group = channels * kernel_h * kernel_w / deformable_group;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data_col.type(), "modulated_deformable_col2im_coord_gpu", ([&] {
-        const scalar_t *data_col_ = data_col.data<scalar_t>();
-        const scalar_t *data_im_ = data_im.data<scalar_t>();
-        const scalar_t *data_offset_ = data_offset.data<scalar_t>();
-        const scalar_t *data_mask_ = data_mask.data<scalar_t>();
-        scalar_t *grad_offset_ = grad_offset.data<scalar_t>();
-        scalar_t *grad_mask_ = grad_mask.data<scalar_t>();
+      data_col.scalar_type(), "modulated_deformable_col2im_coord_gpu", ([&] {
+        const scalar_t *data_col_ = data_col.data_ptr<scalar_t>();
+        const scalar_t *data_im_ = data_im.data_ptr<scalar_t>();
+        const scalar_t *data_offset_ = data_offset.data_ptr<scalar_t>();
+        const scalar_t *data_mask_ = data_mask.data_ptr<scalar_t>();
+        scalar_t *grad_offset_ = grad_offset.data_ptr<scalar_t>();
+        scalar_t *grad_mask_ = grad_mask.data_ptr<scalar_t>();
 
         modulated_deformable_col2im_coord_gpu_kernel<<<GET_BLOCKS(num_kernels), CUDA_NUM_THREADS>>>(
             num_kernels, data_col_, data_im_, data_offset_, data_mask_, channels, height_im, width_im,

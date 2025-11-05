@@ -9,10 +9,11 @@
 // modify from https://github.com/chengdazhi/Deformable-Convolution-V2-PyTorch/blob/mmdetection/mmdet/ops/dcn/src/cuda/deform_psroi_pooling_cuda.cu
 
 #include <ATen/ATen.h>
-#include <THC/THCAtomics.cuh>
-#include <stdio.h>
-#include <math.h>
+#include <ATen/cuda/Atomic.cuh>
 #include <algorithm>
+#include <cuda_fp16.h>
+#include <math.h>
+#include <stdio.h>
 
 using namespace at;
 
@@ -25,6 +26,22 @@ const int CUDA_NUM_THREADS = 1024;
 inline int GET_BLOCKS(const int N)
 {
   return (N + CUDA_NUM_THREADS - 1) / CUDA_NUM_THREADS;
+}
+
+template <typename T>
+__device__ inline void dcn_atomic_add(T *address, T val)
+{
+  atomicAdd(address, val);
+}
+
+template <>
+__device__ inline void dcn_atomic_add<at::Half>(at::Half *address, at::Half val)
+{
+#if defined(__CUDA_ARCH__)
+  static_assert(sizeof(at::Half) == sizeof(__half), "Half size mismatch");
+  atomicAdd(reinterpret_cast<__half *>(address),
+            *reinterpret_cast<const __half *>(&val));
+#endif
 }
 
 template <typename scalar_t>
@@ -237,10 +254,10 @@ __global__ void DeformablePSROIPoolBackwardAccKernel(
         scalar_t q10 = dist_x * (1 - dist_y);
         scalar_t q11 = dist_x * dist_y;
         int bottom_index_base = c * height * width;
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y0 * width + x0, q00 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y1 * width + x0, q01 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y0 * width + x1, q10 * diff_val);
-        atomicAdd(offset_bottom_data_diff + bottom_index_base + y1 * width + x1, q11 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y0 * width + x0, q00 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y1 * width + x0, q01 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y0 * width + x1, q10 * diff_val);
+        dcn_atomic_add(offset_bottom_data_diff + bottom_index_base + y1 * width + x1, q11 * diff_val);
 
         if (no_trans)
         {
@@ -255,8 +272,8 @@ __global__ void DeformablePSROIPoolBackwardAccKernel(
         scalar_t diff_y = (U11 * dist_x + U01 * (1 - dist_x) - U10 * dist_x - U00 * (1 - dist_x)) * trans_std * diff_val;
         diff_y *= roi_height;
 
-        atomicAdd(bottom_trans_diff + (((n * num_classes + class_id) * 2) * part_size + part_h) * part_size + part_w, diff_x);
-        atomicAdd(bottom_trans_diff + (((n * num_classes + class_id) * 2 + 1) * part_size + part_h) * part_size + part_w, diff_y);
+        dcn_atomic_add(bottom_trans_diff + (((n * num_classes + class_id) * 2) * part_size + part_h) * part_size + part_w, diff_x);
+        dcn_atomic_add(bottom_trans_diff + (((n * num_classes + class_id) * 2 + 1) * part_size + part_h) * part_size + part_w, diff_y);
       }
     }
   }
@@ -289,12 +306,12 @@ void DeformablePSROIPoolForward(const at::Tensor data,
   const int channels_each_class = no_trans ? output_dim : output_dim / num_classes;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      data.type(), "deformable_psroi_pool_forward", ([&] {
-        const scalar_t *bottom_data = data.data<scalar_t>();
-        const scalar_t *bottom_rois = bbox.data<scalar_t>();
-        const scalar_t *bottom_trans = no_trans ? NULL : trans.data<scalar_t>();
-        scalar_t *top_data = out.data<scalar_t>();
-        scalar_t *top_count_data = top_count.data<scalar_t>();
+      data.scalar_type(), "deformable_psroi_pool_forward", ([&] {
+        const scalar_t *bottom_data = data.data_ptr<scalar_t>();
+        const scalar_t *bottom_rois = bbox.data_ptr<scalar_t>();
+        const scalar_t *bottom_trans = no_trans ? nullptr : trans.data_ptr<scalar_t>();
+        scalar_t *top_data = out.data_ptr<scalar_t>();
+        scalar_t *top_count_data = top_count.data_ptr<scalar_t>();
 
         DeformablePSROIPoolForwardKernel<<<GET_BLOCKS(count), CUDA_NUM_THREADS>>>(
             count, bottom_data, (scalar_t)spatial_scale, channels, height, width, pooled_height, pooled_width,
@@ -340,14 +357,14 @@ void DeformablePSROIPoolBackwardAcc(const at::Tensor out_grad,
   const int channels_each_class = no_trans ? output_dim : output_dim / num_classes;
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(
-      out_grad.type(), "deformable_psroi_pool_backward_acc", ([&] {
-        const scalar_t *top_diff = out_grad.data<scalar_t>();
-        const scalar_t *bottom_data = data.data<scalar_t>();
-        const scalar_t *bottom_rois = bbox.data<scalar_t>();
-        const scalar_t *bottom_trans = no_trans ? NULL : trans.data<scalar_t>();
-        scalar_t *bottom_data_diff = in_grad.data<scalar_t>();
-        scalar_t *bottom_trans_diff = no_trans ? NULL : trans_grad.data<scalar_t>();
-        const scalar_t *top_count_data = top_count.data<scalar_t>();
+      out_grad.scalar_type(), "deformable_psroi_pool_backward_acc", ([&] {
+        const scalar_t *top_diff = out_grad.data_ptr<scalar_t>();
+        const scalar_t *bottom_data = data.data_ptr<scalar_t>();
+        const scalar_t *bottom_rois = bbox.data_ptr<scalar_t>();
+        const scalar_t *bottom_trans = no_trans ? nullptr : trans.data_ptr<scalar_t>();
+        scalar_t *bottom_data_diff = in_grad.data_ptr<scalar_t>();
+        scalar_t *bottom_trans_diff = no_trans ? nullptr : trans_grad.data_ptr<scalar_t>();
+        const scalar_t *top_count_data = top_count.data_ptr<scalar_t>();
 
         DeformablePSROIPoolBackwardAccKernel<<<GET_BLOCKS(count), CUDA_NUM_THREADS>>>(
             count, top_diff, top_count_data, num_rois, (scalar_t)spatial_scale, channels, height, width,

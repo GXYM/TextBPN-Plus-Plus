@@ -112,12 +112,11 @@ void shape_check(at::Tensor input, at::Tensor offset, at::Tensor *gradOutput,
   TORCH_CHECK(nInputPlane % deformable_group == 0,
            "input channels must divide deformable group size");
 
-  if (outputWidth < 1 || outputHeight < 1)
-    AT_ERROR(
-        "Given input size: (%ld x %ld x %ld). "
-        "Calculated output size: (%ld x %ld x %ld). Output size is too small",
-        nInputPlane, inputHeight, inputWidth, nOutputPlane, outputHeight,
-        outputWidth);
+  TORCH_CHECK(outputWidth >= 1 && outputHeight >= 1,
+              "Given input size: (", nInputPlane, " x ", inputHeight, " x ",
+              inputWidth, "). Calculated output size: (", nOutputPlane,
+              " x ", outputHeight, " x ", outputWidth,
+              "). Output size is too small");
 
   TORCH_CHECK(input.size(1) == nInputPlane,
            "invalid number of input planes, expected: %d, but got: %d",
@@ -134,7 +133,7 @@ void shape_check(at::Tensor input, at::Tensor offset, at::Tensor *gradOutput,
   TORCH_CHECK((offset.size(1) == deformable_group * 2 * kH * kW),
            "invalid number of channels of offset");
 
-  if (gradOutput != NULL) {
+  if (gradOutput != nullptr) {
     TORCH_CHECK(gradOutput->size(dimf) == nOutputPlane,
              "invalid number of gradOutput planes, expected: %d, but got: %d",
              nOutputPlane, gradOutput->size(dimf));
@@ -160,7 +159,7 @@ int deform_conv_forward_cuda(at::Tensor input, at::Tensor weight,
   // transpose output) todo: possibly change data indexing because of
   // parallel_imgs
 
-  shape_check(input, offset, NULL, weight, kH, kW, dH, dW, padH, padW,
+  shape_check(input, offset, nullptr, weight, kH, kW, dH, dW, padH, padW,
               dilationH, dilationW, group, deformable_group);
 
   input = input.contiguous();
@@ -189,7 +188,7 @@ int deform_conv_forward_cuda(at::Tensor input, at::Tensor weight,
   long outputHeight =
       (inputHeight + 2 * padH - (dilationH * (kH - 1) + 1)) / dH + 1;
 
-  TORCH_CHECK((offset.size(0) == batchSize), "invalid batch size of offset");
+  TORCH_CHECK(offset.size(0) == batchSize, "invalid batch size of offset");
 
   output = output.view({batchSize / im2col_step, im2col_step, nOutputPlane,
                         outputHeight, outputWidth});
@@ -295,7 +294,7 @@ int deform_conv_backward_input_cuda(at::Tensor input, at::Tensor offset,
   long outputHeight =
       (inputHeight + 2 * padH - (dilationH * (kH - 1) + 1)) / dH + 1;
 
-  TORCH_CHECK((offset.size(0) == batchSize), 3, "invalid batch size of offset");
+  TORCH_CHECK(offset.size(0) == batchSize, "invalid batch size of offset");
   gradInput = gradInput.view({batchSize, nInputPlane, inputHeight, inputWidth});
   columns = at::zeros(
       {nInputPlane * kW * kH, im2col_step * outputHeight * outputWidth},
@@ -392,8 +391,7 @@ int deform_conv_backward_parameters_cuda(
   if (input.ndimension() == 3) {
     // Force batch
     batch = 0;
-    input = input.view(
-        at::IntList({1, input.size(0), input.size(1), input.size(2)}));
+    input = input.view({1, input.size(0), input.size(1), input.size(2)});
     gradOutput = gradOutput.view(
         {1, gradOutput.size(0), gradOutput.size(1), gradOutput.size(2)});
   }
@@ -410,7 +408,7 @@ int deform_conv_backward_parameters_cuda(
   long outputHeight =
       (inputHeight + 2 * padH - (dilationH * (kH - 1) + 1)) / dH + 1;
 
-  TORCH_CHECK((offset.size(0) == batchSize), "invalid batch size of offset");
+  TORCH_CHECK(offset.size(0) == batchSize, "invalid batch size of offset");
 
   columns = at::zeros(
       {nInputPlane * kW * kH, im2col_step * outputHeight * outputWidth},
@@ -503,12 +501,12 @@ void modulated_deform_conv_cuda_forward(
   const int kernel_h_ = weight.size(2);
   const int kernel_w_ = weight.size(3);
 
-  if (kernel_h_ != kernel_h || kernel_w_ != kernel_w)
-    AT_ERROR("Input shape and kernel shape wont match: (%d x %d vs %d x %d).",
-             kernel_h_, kernel_w, kernel_h_, kernel_w_);
-  if (channels != channels_kernel * group)
-    AT_ERROR("Input shape and kernel channels wont match: (%d vs %d).",
-             channels, channels_kernel * group);
+  TORCH_CHECK(kernel_h_ == kernel_h && kernel_w_ == kernel_w,
+              "Input shape and kernel shape wont match: (", kernel_h_, " x ",
+              kernel_w_, " vs ", kernel_h, " x ", kernel_w, ").");
+  TORCH_CHECK(channels == channels_kernel * group,
+              "Input shape and kernel channels wont match: (", channels,
+              " vs ", channels_kernel * group, ").");
 
   const int height_out =
       (height + 2 * pad_h - (dilation_h * (kernel_h - 1) + 1)) / stride_h + 1;
@@ -582,12 +580,12 @@ void modulated_deform_conv_cuda_backward(
   const int channels_kernel = weight.size(1);
   const int kernel_h_ = weight.size(2);
   const int kernel_w_ = weight.size(3);
-  if (kernel_h_ != kernel_h || kernel_w_ != kernel_w)
-    AT_ERROR("Input shape and kernel shape wont match: (%d x %d vs %d x %d).",
-             kernel_h_, kernel_w, kernel_h_, kernel_w_);
-  if (channels != channels_kernel * group)
-    AT_ERROR("Input shape and kernel channels wont match: (%d vs %d).",
-             channels, channels_kernel * group);
+  TORCH_CHECK(kernel_h_ == kernel_h && kernel_w_ == kernel_w,
+              "Input shape and kernel shape wont match: (", kernel_h_, " x ",
+              kernel_w_, " vs ", kernel_h, " x ", kernel_w, ").");
+  TORCH_CHECK(channels == channels_kernel * group,
+              "Input shape and kernel channels wont match: (", channels,
+              " vs ", channels_kernel * group, ").");
 
   const int height_out =
       (height + 2 * pad_h - (dilation_h * (kernel_h - 1) + 1)) / stride_h + 1;
