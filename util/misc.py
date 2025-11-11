@@ -6,6 +6,7 @@ import math
 from shapely.geometry import Polygon
 from cfglib.config import config as cfg
 from scipy import ndimage as ndimg
+import re
 
 def to_device(*tensors):
     if len(tensors) < 2:
@@ -391,9 +392,35 @@ def merge_polygons(polygons, merge_map):
     return final_polygons
 
 
+
+_component_re = re.compile(r'(\d+ | [a-z]+ | \.)', re.VERBOSE)
+
+def LooseVersion(vstring):
+    """Copied from `distutils.version.LooseVersion`.
+    Note that (like distutils.version.LooseVersion) this simply sorts
+    lexicographically according to the "." or "-" separated components in the
+    version string:
+    >>> LooseVersion("4.0.0-beta.1")
+    [4, 0, 0, '-', 'beta', 1]
+    >>> (LooseVersion('4.0.0-beta.1') > LooseVersion('4.0.0'))
+    True
+    """
+
+    components = [x for x in _component_re.split(vstring) if x and x != '.']
+    for i, obj in enumerate(components):
+        try:
+            components[i] = int(obj)
+        except ValueError:
+            pass
+    return components
+
+
 def get_sample_point(text_mask, num_points, approx_factor, scales=None):
     # get sample point in contours
-    contours, _ = cv2.findContours(text_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = cv2.findContours(text_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)        
+    version = LooseVersion(cv2.__version__)
+    contours = contours[0] if version >= [4, 0, 0] else contours[1]
+
     epsilon = approx_factor * cv2.arcLength(contours[0], True)
     approx = cv2.approxPolyDP(contours[0], epsilon, True).reshape((-1, 2))
     # approx = contours[0].reshape((-1, 2))

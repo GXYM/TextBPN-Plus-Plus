@@ -8,7 +8,7 @@ from PIL import Image
 from scipy import ndimage as ndimg
 from cfglib.config import config as cfg
 from util.misc import find_bottom, find_long_edges, split_edge_seqence, \
-    vector_sin, get_sample_point
+    vector_sin, get_sample_point, LooseVersion
 
 
 def pil_load_img(path):
@@ -120,7 +120,11 @@ class TextDataset(object):
     def generate_proposal_point(text_mask, num_points, approx_factor, jitter=0.0, distance=10.0):
         # get  proposal point in contours
         h, w = text_mask.shape[0:2]
-        contours, _ = cv2.findContours(text_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours = cv2.findContours(text_mask.astype(
+            np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        version = LooseVersion(cv2.__version__)
+        contours = contours[0] if version >= [4, 0, 0] else contours[1]
+
         epsilon = approx_factor * cv2.arcLength(contours[0], True)
         approx = cv2.approxPolyDP(contours[0], epsilon, True).reshape((-1, 2))
         ctrl_points = split_edge_seqence(approx, num_points)
@@ -162,13 +166,13 @@ class TextDataset(object):
 
         train_mask = np.ones((h, w), np.uint8)
         tr_mask = np.zeros((h, w), np.uint8)
-        weight_matrix = np.zeros((h, w), dtype=np.float)
-        direction_field = np.zeros((2, h, w), dtype=np.float)
-        distance_field = np.zeros((h, w), np.float)
+        weight_matrix = np.zeros((h, w), dtype=np.float64)
+        direction_field = np.zeros((2, h, w), dtype=np.float64)
+        distance_field = np.zeros((h, w), np.float64)
 
-        gt_points = np.zeros((cfg.max_annotation, cfg.num_points, 2), dtype=np.float)
-        proposal_points = np.zeros((cfg.max_annotation, cfg.num_points, 2), dtype=np.float)
-        ignore_tags = np.zeros((cfg.max_annotation,), dtype=np.int)
+        gt_points = np.zeros((cfg.max_annotation, cfg.num_points, 2), dtype=np.float64)
+        proposal_points = np.zeros((cfg.max_annotation, cfg.num_points, 2), dtype=np.float64)
+        ignore_tags = np.zeros((cfg.max_annotation,), dtype=np.int32)
 
         if polygons is None:
             return train_mask, tr_mask, \
@@ -181,7 +185,7 @@ class TextDataset(object):
             polygon.points[:, 0] = np.clip(polygon.points[:, 0], 1, w - 2)
             polygon.points[:, 1] = np.clip(polygon.points[:, 1], 1, h - 2)
             gt_points[idx, :, :] = polygon.get_sample_point(size=(h, w))
-            cv2.fillPoly(tr_mask, [polygon.points.astype(np.int)], color=(idx + 1,))
+            cv2.fillPoly(tr_mask, [polygon.points.astype(np.int32)], color=(idx + 1,))
 
             inst_mask = mask_zeros.copy()
             cv2.fillPoly(inst_mask, [polygon.points.astype(np.int32)], color=(1,))
